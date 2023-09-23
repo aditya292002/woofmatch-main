@@ -1,0 +1,26 @@
+<%- include("partials/header.ejs") %>
+
+<section id = "identify-breed">
+<div class="container-fluid">
+    <h2 class="section-heading">Identify Dog Breed</h2>
+
+    <!-- Breed Identification Form -->
+    <form id="breed-identification-form" enctype="multipart/form-data">
+    <input type="file" id="image-input" accept="image/*">
+    <button type="button" id="identify-button" class="btn btn-dark btn-lg">Identify</button>
+    </form>
+
+    <!-- Selected Image Display -->
+    <div id="image-preview">
+    <!-- The selected image will be displayed here -->
+    </div>
+
+    <!-- Result Display -->
+    <div id="result">
+    <!-- The breed identification result will be displayed here -->
+    </div>
+</div>
+    
+</section>
+
+<%- include("partials/footer.ejs") %>

@@ -1,0 +1,235 @@
+/*
+font-family: 'Montserrat', sans-serif;
+font-family: 'Ubuntu', sans-serif;
+*/
+body {
+  font-family: "Montserrat", sans-serif;
+  text-align: center;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+}
+
+p {
+  color: #8f8f8f;
+}
+
+/* Headings */
+.big-heading {
+  font-family: "Montserrat", sans-serif;
+  font-size: 3.5rem;
+  line-height: 1.5;
+  font-weight: 900;
+}
+
+.section-heading {
+  font-size: 3rem;
+  line-height: 1.5;
+}
+
+/* Containers */
+.container-fluid {
+  padding : 7% 15%;
+}
+
+
+/* Navigation Bar */
+
+#nav-Woof {
+  font-weight: 600;
+}
+#nav-Match {
+  font-weight: 200;
+}
+ 
+.navbar {
+  padding: 0 1rem;
+  background-color: white;
+  color: #ff4c68;
+}
+
+.navbar-brand {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 2rem;
+  font-weight: 500;
+  color: #bf2e44; 
+}
+
+.nav-item {
+  padding: 0 1.125rem
+}
+
+.nav-link {
+  font-size: 1.2rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+}
+
+
+/* DOWNLOAD BUTTONS */
+
+.download-button {
+  margin: 5% 3% 5% 0;
+}
+
+/* Title Section */
+
+
+.gradient-background {
+  background: linear-gradient(45deg,  #E6E6FA  , #D8A7B8, #B8E3FF, #EFFBEE);
+  background-size: 200% 200%;
+  animation: gradient-animation 18s ease infinite;
+  color: white;
+}
+
+
+
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+
+#title .container-fluid {
+  padding: 2.5% 15% 7%;
+}
+
+/* Title Image */
+
+.title-image {
+  width: 20.5%;
+  transform: rotate(25deg);
+  position:absolute;
+  right: 23%;
+}
+
+/* Features Section */
+#features {
+  background-color: white;
+  position: relative;
+  /* position: absolute; */
+    /* absolute property does not work here because with absolute position the element goes out of HTML flow*/
+
+  /* We have not given z index here because
+  According to flow chart
+  The positioned element that come later in HTML code will be on top*/
+}
+
+.feature-title {
+  font-size: 1.5rem;
+}
+
+.feature-box {
+  padding: 5%;
+  font-weight: 500;
+}
+
+.icon {
+  color: #ef8172;
+  margin-bottom: 1rem;
+}
+
+.icon:hover {
+  color: #ff4c68;
+}
+
+
+/*Breed Identification*/
+#identify-breed {
+  background-color: #EEF3F6;
+  height: 200vh;
+}
+
+
+/* Testimonials Section */
+#testimonials {
+  background-color: #EEF3F6;
+  color: #757785;
+}
+
+.testimonial-text {
+  font-size: 3rem;
+  line-height: 1.5;
+}
+
+.testimonial-image {
+  width: 10%;
+  border-radius: 100%;
+  margin: 1.25rem;
+}
+
+.carousel-control-prev-icon, .carousel-control-next-icon {
+  background-color: black /* Set the desired button color */
+  /* Add any other custom styles you want to apply to the control buttons */
+}
+
+
+/* press section */
+#press {
+  background-color: #cfddfc;
+  padding-bottom: 5.5%;
+}
+
+.press-logo {
+  width: 15%;
+  margin: 20px 20px 15px;
+}
+
+/* Pricing Section */
+#pricing {
+  background-color: white;
+  padding: 100px;
+}
+
+.price-text {
+  font-size: 3rem;
+  line-height: 1.5;
+}
+
+.pricing-column {
+  padding: 3% 2%;
+}
+
+
+/* CTA Section */
+#cta {
+  background-color: #dde0e1;
+  color: #c91836;
+}
+
+
+/* Footer Section */
+
+.social-icon {
+  margin: 20px 10px;
+}
+
+@media (max-width: 1028px) {
+
+  #title {
+    text-align: center;
+  }
+
+  .title-image {
+    position: static;
+    width: 60%;
+    transform: rotate(0);
+  }
+}
+
+
+/* About Section */
+#about {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 10px;
+}
