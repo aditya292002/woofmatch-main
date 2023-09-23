@@ -16,6 +16,9 @@ p {
   color: #8f8f8f;
 }
 
+a {
+  background-color: white;
+}
 /* Headings */
 .big-heading {
   font-family: "Montserrat", sans-serif;
