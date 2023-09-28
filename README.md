@@ -1,6 +1,11 @@
 # WoofMatch
 
 🚀 Deployment URL: [Visit WoofMatch](https://woofmatch.onrender.com)
+**Note**:
+
+1. **Deployed Code**: You can access the deployed version of this project at [WoofMatch Deployed Site](https://github.com/aditya292002/woofmatch/tree/main). Please note that the deployed site does not include a database and some additional features.
+
+2. **Running Locally**: To access the full functionality of this project, including the database and additional features, you should run the code locally on your machine.
 
 # WoofMatch - Where Dogs Find Friends!
 
