@@ -41,7 +41,7 @@ WoofMatch is where paws meet pixels, and your dog's social life flourishes. Disc
    npm install
 2. Run WebApp
 3.   ```bash
-     node app.js
+     node index.js
 
 
 ## Contributing
