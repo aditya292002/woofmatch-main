@@ -1,12 +1,8 @@
 import express from "express";
 import multer from "multer";
 import { identifyBreed } from "./breedIdentification.js";
-
-
-// import requirements for blog section 
 import bodyParser from "body-parser";
-import axios from "axios";
-
+import mongoose from "mongoose";
 
 const app = express();
 const port = 3000;
@@ -22,9 +18,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static("public"));
 app.set('view engine', 'ejs');
+
 
 
 app.get("/", (req, res) => {
@@ -35,38 +33,36 @@ app.get("/identify-breed", (req, res) => {
   res.render("identify-breed.ejs");
 });
 
+app.post("/identify-breed", upload.single("dogImage"), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "No file uploaded." });
+    }
+    console.log("Done1");
 
+    const filename = `./uploads/${req.file.filename}`;
+    console.log(filename);
 
-// app.post("/identify-breed", upload.single("dogImage"), async (req, res) => {
-//   try {
-//     if (!req.file) {
-//       return res.status(400).json({ error: "No file uploaded." });
-//     }
-//     console.log("Done1");
+    const response = await identifyBreed(filename);
+    console.log(response);
 
-//     const filename = `./uploads/${req.file.filename}`;
-//     console.log(filename);
-
-//     const response = await identifyBreed(filename);
-//     console.log(response);
-
-//     if (response && response.length > 0) {
-//       // Render the result page with image and response data
-//       const data = {
-//         imageFileName: filename, // Pass the path to the uploaded image
-//         response: response,      // Pass the breed identification results
-//       };
-//       res.render("identify-breed.ejs", data);
-//     } else {
-//       // Handle cases where no valid response is available
-//       res.status(500).json({ error: "Breed identification failed." });
-//     }
-//   } catch (err) {
-//     console.error("Some error occurred:", err);
-//     // Handle and respond to the error
-//     res.status(500).json({ error: "Internal server error." });
-//   }
-// });
+    if (response && response.length > 0) {
+      // Render the result page with image and response data
+      const data = {
+        imageFileName: filename, // Pass the path to the uploaded image
+        response: response,      // Pass the breed identification results
+      };
+      res.render("identify-breed.ejs", data);
+    } else {
+      // Handle cases where no valid response is available
+      res.status(500).json({ error: "Breed identification failed." });
+    }
+  } catch (err) {
+    console.error("Some error occurred:", err);
+    // Handle and respond to the error
+    res.status(500).json({ error: "Internal server error." });
+  }
+});
 
 
 app.get("/price", (req, res) => {
@@ -81,82 +77,112 @@ app.get("/about-us", (req, res) => {
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-// blog section 
+// blog section
 
-const API_URL = "http://localhost:4000";
+// Connect to MongoDB
+async function makeConnection() {
+  try {
+    await mongoose.connect("mongodb://127.0.0.1:27017/blogDB", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("Successfully connected to DB");
+  } catch (error) {
+    console.error("Error occurred while making connection:", error);
+  }
+}
+makeConnection();
 
-// app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+// Define a schema
+const blogSchema = mongoose.Schema({
+  Author: {
+    type: String,
+    required: [true, "Please enter an author name"],
+  },
+  Content: {
+    type: String,
+    required: [true, "Content cannot be empty"],
+  },
+  Date: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
-// Route to render the main page
+// Defining the model
+const Blog = mongoose.model("Blog", blogSchema);
+
+// Default blogs
+const defaultBlogs = [
+  {
+    Author: "Prakash Jha",
+    Content: "Are you a dog lover? If so, you're in the right place! In this blog post, we'll embark on a journey into the fascinating world of canine companions. Dogs have been our loyal friends for thousands of years, and there's so much to discover about them.",
+    Date: new Date("2023-09-23T12:00:00Z"),
+  },
+  {
+    Author: "Aditya Keshari",
+    Content: "Having a furry friend by your side offers numerous benefits. We'll discuss how dogs can improve your physical and mental health, provide companionship, and even enhance your social life. It's no wonder they're often referred to as 'man's best friend'",
+    Date: new Date("2023-09-23T12:00:00Z"),
+  },
+  {
+    Author: "Aditya",
+    Content: "Having a furry friend by your side offers numerous benefits. We'll discuss how dogs can improve your physical and mental health, provide companionship, and even enhance your social life. It's no wonder they're often referred to as 'man's best friend'",
+    Date: new Date("2023-09-23T12:00:00Z"),
+  },
+];
+
+// Insert default blogs into the database blogDB
+async function insertDefaultBlogs() {
+  try {
+    const count = await Blog.countDocuments();
+    if (count === 0) {
+      await Blog.insertMany(defaultBlogs);
+      console.log("Successfully inserted default blogs to DB");
+    }
+  } catch (error) {
+    console.error("Insert Default blogs Error:", error);
+  }
+}
+insertDefaultBlogs();
+
 app.get("/blog", async (req, res) => {
   try {
-    const response = await axios.get(`${API_URL}/posts`);
-    console.log(response);
-    res.render("blog_files/index.ejs", { posts: response.data });
+    const response = await Blog.find({});
+    res.render("blog_files/index.ejs", { allBlogs: response });
   } catch (error) {
-    res.status(500).json({ message: "Error fetching posts" });
+    console.error("Error occurred while getting all documents:", error);
+    res.status(500).send("Error occurred while fetching data");
   }
 });
 
-// Route to render the edit page
-app.get("/blog/new", (req, res) => {
-  res.render("blog_files/modify.ejs", { heading: "New Post", submit: "Create Post" });
+app.get("/compose", (req, res) => {
+  res.render("blog_files/compose.ejs");
 });
 
-app.get("/blog/edit/:id", async (req, res) => {
+app.post("/newBlog", async (req, res) => {
   try {
-    const response = await axios.get(`${API_URL}/posts/${req.params.id}`);
-    console.log(response.data);
-    res.render("blog_files/modify.ejs", {
-      heading: "Edit Post",
-      submit: "Update Post",
-      post: response.data,
+    const author = req.body.blog_author;
+    const content = req.body.blog_content;
+
+    // Create a new instance of the Blog model with the data
+    const blog = new Blog({
+      Author: author,
+      Content: content,
+      Date: Date.now(),
     });
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching post" });
-  }
-});
 
-// Create a new post
-app.post("/blog/api/posts", async (req, res) => {
-  try {
-    const response = await axios.post(`${API_URL}/posts`, req.body);
-    console.log(response.data);
+    // Save the new blog to the database
+    await blog.save();
+
+    // Redirect to the homepage or another appropriate page
     res.redirect("/blog");
   } catch (error) {
-    res.status(500).json({ message: "Error creating post" });
+    console.error("Error inserting new blog:", error);
+    res.status(500).send("Error inserting new blog");
   }
 });
 
-// Partially update a post
-app.post("/blog/api/posts/:id", async (req, res) => {
-  console.log("called");
-  try {
-    const response = await axios.patch(
-      `${API_URL}/posts/${req.params.id}`,
-      req.body
-    );
-    console.log(response.data);
-    res.redirect("/blog");
-  } catch (error) {
-    res.status(500).json({ message: "Error updating post" });
-  }
-});
-
-// Delete a post
-app.get("/blog/api/posts/delete/:id", async (req, res) => {
-  try {
-    await axios.delete(`${API_URL}/posts/${req.params.id}`);
-    res.redirect("/blog");
-  } catch (error) {
-    res.status(500).json({ message: "Error deleting post" });
-  }
-});
-
+// Start the Express server
 app.listen(port, () => {
-  console.log(`Backend server is running on http://localhost:${port}`);
+  console.log(`Server is running on http://localhost:${port}`);
 });
-
-
-
