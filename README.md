@@ -67,3 +67,7 @@ Follow us on social media for the latest updates, adorable dog photos, and more:
 - [Twitter](https://twitter.com/woofmatch)
 
 Thank you for choosing WoofMatch, the place where dogs make friends that last a lifetime! 🐕❤️
+
+
+## LICENSE
+[MIT LICENSE](LICENSE)
